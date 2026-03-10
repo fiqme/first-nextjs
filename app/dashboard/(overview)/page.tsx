@@ -2,20 +2,21 @@ import { Card } from "@/app/ui/dashboard/cards";
 import RevenueChart from "@/app/ui/dashboard/revenue-chart";
 import LatestInvoices from "@/app/ui/dashboard/latest-invoices";
 import { lusitana } from "@/app/ui/fonts";
-import { fetchLatestInvoices, fetchCardData } from "@/app/lib/data";
+import { fetchCardData } from "@/app/lib/data";
 import { Suspense } from "react";
 import { RevenueChartSkeleton } from "@/app/ui/skeletons";
+import { LatestInvoicesSkeleton } from "@/app/ui/skeletons";
 
 export default async function Page() {
   //bila ada async, maksudnya dalam ni akan ada function yang guna await (await: kena tunggu habis fetch baru proceed next line).
 
-  const latestInvoices = await fetchLatestInvoices(); //await akan tunggu sampai data dah habis fetch
+  // const latestInvoices = await fetchLatestInvoices();
   const {
     totalPaidInvoices,
     totalPendingInvoices,
     numberOfInvoices,
     numberOfCustomers,
-  } = await fetchCardData();
+  } = await fetchCardData(); //await akan tunggu sampai data dah habis fetch
 
   return (
     <main>
@@ -36,7 +37,9 @@ export default async function Page() {
         <Suspense fallback={<RevenueChartSkeleton />}>
           <RevenueChart />
         </Suspense>
-        <LatestInvoices latestInvoices={latestInvoices} />
+        <Suspense fallback={<LatestInvoicesSkeleton />}>
+          <LatestInvoices />
+        </Suspense>
       </div>
     </main>
   );
